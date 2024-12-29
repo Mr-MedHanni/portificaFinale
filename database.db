@@ -1,0 +1,84 @@
+-- Création de la base de données
+CREATE DATABASE IF NOT EXISTS talentmatcher_upf;
+USE talentmatcher_upf;
+
+-- Table des utilisateurs
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    user_type ENUM('student', 'recruiter') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table des étudiants (informations spécifiques aux étudiants)
+CREATE TABLE students (
+    user_id INT PRIMARY KEY,
+    major VARCHAR(100),
+    graduation_year INT,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Table des recruteurs (informations spécifiques aux recruteurs)
+CREATE TABLE recruiters (
+    user_id INT PRIMARY KEY,
+    company_name VARCHAR(100),
+    position VARCHAR(100),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Table des CV
+CREATE TABLE cvs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    file_path VARCHAR(255) NOT NULL,
+    upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(user_id) ON DELETE CASCADE
+);
+
+-- Table des compétences
+CREATE TABLE skills (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
+);
+
+-- Table de liaison entre étudiants et compétences
+CREATE TABLE student_skills (
+    student_id INT,
+    skill_id INT,
+    PRIMARY KEY (student_id, skill_id),
+    FOREIGN KEY (student_id) REFERENCES students(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (skill_id) REFERENCES skills(id) ON DELETE CASCADE
+);
+
+-- Table des offres d'emploi
+CREATE TABLE job_offers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    recruiter_id INT NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    description TEXT,
+    requirements TEXT,
+    posted_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (recruiter_id) REFERENCES recruiters(user_id) ON DELETE CASCADE
+);
+
+-- Table de liaison entre offres d'emploi et compétences requises
+CREATE TABLE job_offer_skills (
+    job_offer_id INT,
+    skill_id INT,
+    PRIMARY KEY (job_offer_id, skill_id),
+    FOREIGN KEY (job_offer_id) REFERENCES job_offers(id) ON DELETE CASCADE,
+    FOREIGN KEY (skill_id) REFERENCES skills(id) ON DELETE CASCADE
+);
+
+-- Table des candidatures
+CREATE TABLE applications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    job_offer_id INT NOT NULL,
+    application_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('pending', 'reviewed', 'accepted', 'rejected') DEFAULT 'pending',
+    FOREIGN KEY (student_id) REFERENCES students(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (job_offer_id) REFERENCES job_offers(id) ON DELETE CASCADE
+);

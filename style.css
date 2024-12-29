@@ -1,0 +1,63 @@
+/* Ensure body and header use the full viewport width */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+header {
+    width: 100%;
+    margin: 0;
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+main, footer {
+    width: 100%;
+    /* padding: 0; */
+    margin: 0;
+}
+
+footer {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+}
+
+/* Container spacing adjustments */
+.container-fluid, .hero, .features, .user-types {
+    max-width: 100%;
+    margin: 0;
+    padding: 1rem 2rem; /* Add horizontal padding for spacing */
+    box-sizing: border-box;
+}
+
+.features {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.feature-card {
+    flex: 1 1 calc(33.333% - 2rem);
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.user-types .user-type-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+footer {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 1.5rem 0;
+    margin: 0;
+    width: 100%;
+}
